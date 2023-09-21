@@ -48,6 +48,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 40,
   },
+  imageButton: {
+    backgroundColor: "#F6F7FB",
+    height: 58,
+    borderRadius: 10,
+    justifyContent: "center",
+    paddingHorizontal: 20,
+  },
   buttonText: {
     fontWeight: "bold",
     color: "#fff",

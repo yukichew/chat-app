@@ -1,14 +1,24 @@
-import React, { useEffect } from "react";
-import { View, TouchableOpacity, Text, Image, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
-import colors from "../../../colors";
-import { Entypo } from "@expo/vector-icons";
-const catImageUrl =
-  "https://i.guim.co.uk/img/media/26392d05302e02f7bf4eb143bb84c8097d09144b/446_167_3683_2210/master/3683.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=49ed3252c0b2ffb49cf8b508892e452d";
+import styles from "./styles";
+import { collection, getDocs } from "firebase/firestore";
+import ContactsList from "../contact/ContactList";
+import { database, auth, storage } from "../../../config/firebase";
+import { ref, getDownloadURL } from "firebase/storage";
 
 const Home = () => {
   const navigation = useNavigation();
+  const [users, setUsers] = useState([]);
+  const [avatarUrl, setAvatarUrl] = useState("");
+
+  const handleContactPress = (contact) => {
+    navigation.navigate("Chat", {
+      recipient: contact,
+      imageUrl: contact.avatar,
+    });
+  };
 
   useEffect(() => {
     navigation.setOptions({
@@ -20,51 +30,59 @@ const Home = () => {
           style={{ marginLeft: 20 }}
         />
       ),
-      headerRight: () => (
-        <Image
-          source={{ url: catImageUrl }}
-          style={{ width: 30, height: 30, borderRadius: 15, marginRight: 20 }}
-        />
-      ),
+      headerRight: () => {
+        return (
+          <Image
+            source={{
+              uri: avatarUrl,
+            }}
+            style={{ width: 30, height: 30, borderRadius: 15, marginRight: 20 }}
+          />
+        );
+      },
     });
-  }, [navigation]);
+  }, [navigation, avatarUrl]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(database, "users"));
+        const userData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setUsers(userData);
+        console.log();
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    const fetchAvatarUrl = async () => {
+      try {
+        const storageRef = ref(storage, `avatar/${auth.currentUser.uid}`);
+        await getDownloadURL(storageRef).then((url) => {
+          setAvatarUrl(url);
+        });
+      } catch (error) {
+        console.error("Error fetching avatar URL:", error);
+      }
+    };
+    fetchAvatarUrl();
+  }, []);
+
+  const filteredUsers = users.filter(
+    (user) => user.email !== auth?.currentUser?.email
+  );
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Chat")}
-        style={styles.chatButton}
-      >
-        <Entypo name="chat" size={24} color={colors.lightGray} />
-      </TouchableOpacity>
+      <ContactsList contacts={filteredUsers} onPress={handleContactPress} />
     </View>
   );
 };
 
 export default Home;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "flex-end",
-    backgroundColor: "#fff",
-  },
-  chatButton: {
-    backgroundColor: colors.primary,
-    height: 50,
-    width: 50,
-    borderRadius: 25,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: colors.primary,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.9,
-    shadowRadius: 8,
-    marginRight: 20,
-    marginBottom: 50,
-  },
-});

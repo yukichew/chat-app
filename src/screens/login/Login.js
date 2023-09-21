@@ -24,7 +24,7 @@ const Login = ({ navigation }) => {
       signInWithEmailAndPassword(auth, email, password)
         .then((res) => {
           console.log(res);
-          console.log("User logged-in successfully!");
+          console.warn("User logged-in successfully!");
           setEmail("");
           setPassword("");
         })

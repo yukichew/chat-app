@@ -1,18 +1,21 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+import Constants from "expo-constants";
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBLy1JX2tdbEeW2m9_KX_951GtbWuLtZEM",
-  authDomain: "chat-app-93bf8.firebaseapp.com",
-  projectId: "chat-app-93bf8",
+  apiKey: Constants.expoConfig.extra.apiKey,
+  authDomain: Constants.expoConfig.extra.authDomain,
+  projectId: Constants.expoConfig.extra.projectId,
   storageBucket: "chat-app-93bf8.appspot.com",
-  messagingSenderId: "439802101036",
-  appId: "1:439802101036:web:eeaff5de8066389ccd4089",
+  messagingSenderId: Constants.expoConfig.extra.messagingSenderId,
+  appId: Constants.expoConfig.extra.appId,
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const database = getFirestore(app);
+export const storage = getStorage(app);
