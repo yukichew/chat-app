@@ -121,7 +121,7 @@ const Signup = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)}
         />
         <TouchableOpacity onPress={pickImage} style={styles.imageButton}>
-          <Text style={{ fontWeight: "bold", color: "#f57c00", fontSize: 18 }}>
+          <Text style={{ fontWeight: "bold", color: "#9D537C", fontSize: 18 }}>
             Upload Avatar
           </Text>
         </TouchableOpacity>
@@ -147,7 +147,7 @@ const Signup = ({ navigation }) => {
             Already have an account?
           </Text>
           <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-            <Text style={{ color: "#f57c00", fontWeight: 600, fontSize: 14 }}>
+            <Text style={{ color: "#9D537C", fontWeight: 600, fontSize: 14 }}>
               {" "}
               Login
             </Text>

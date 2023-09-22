@@ -20,13 +20,13 @@ An intuitive and real-time chat application built with React Native, Firebase, a
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/YOUR_GITHUB_USERNAME/chat-app.git
+   git clone https://github.com/yukichew/chat-app.git
    cd chat-app
    ```
 
 2. **Install dependencies**
 
-   ```bash
+   ```bashxx
    npm install
    ```
 
